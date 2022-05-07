@@ -42,6 +42,8 @@ private slots:
 
     void on_comboBox_sort_currentTextChanged(const QString &arg1);
 
+    void on_lineEdit_textEdited(const QString &arg1);
+
 public:
     QSqlDatabase myDB;
 

@@ -92,66 +92,69 @@
      <string>Return</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_sort">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>20</y>
-      <width>37</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>sort:</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox_sort">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
+      <x>40</x>
       <y>10</y>
-      <width>141</width>
-      <height>22</height>
+      <width>241</width>
+      <height>24</height>
      </rect>
     </property>
-    <item>
-     <property name="text">
-      <string>None</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Alphabetically</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Subscription days left</string>
-     </property>
-    </item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Search:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="placeholderText">
+        <string>Enter User ID</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>570</x>
       <y>10</y>
-      <width>113</width>
-      <height>20</height>
+      <width>171</width>
+      <height>24</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>10</y>
-      <width>37</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Search:</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_sort">
+       <property name="text">
+        <string>sort:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_sort">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Alphabetically</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Subscription days left</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -160,7 +163,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

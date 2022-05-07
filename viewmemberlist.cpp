@@ -224,8 +224,40 @@ void Viewmemberlist::recieveCombo(){
                 modal->setQuery(*qry);
                 ui->tableView->setModel(modal);
                 myDB.close();
-                }
-
-
-
+            }
 }
+
+void Viewmemberlist::on_lineEdit_textEdited(const QString &arg1)
+{
+//    QString chosen_genre = ui->comboBox_gserach->currentText();
+    QString searchedTxt = ui->lineEdit->text();
+    QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
+    myDB = QSqlDatabase::addDatabase("QSQLITE");
+    myDB.setDatabaseName(database_path);
+    if(!myDB.open()){
+         QMessageBox::warning(this,"Problem in database", "Failed to open the database.");
+    }
+    QSqlQueryModel *modal = new QSqlQueryModel();
+    QSqlQuery *qry = new QSqlQuery(myDB);
+
+    if (searchedTxt.isEmpty()) {
+        qry->prepare("SELECT members.*,"
+                     "Cast ((JULIANDAY(sub_endDate)-JULIANDAY('now')) As Integer)+1 AS sub_daysLeft FROM members");
+        qry->exec();
+        modal->setQuery(*qry);
+        ui->tableView->setModel(modal);
+        myDB.close();
+    }
+    else {
+        qry->prepare("SELECT members.*,"
+                     "Cast ((JULIANDAY(sub_endDate)-JULIANDAY('now')) As Integer)+1 AS sub_daysLeft FROM members"
+                     " where Cast(member_id as varchar) like '%" + searchedTxt + "%' order by"
+                     " case when Cast(member_id as varchar) = " + searchedTxt + " then 1"
+                     " when Cast(member_id as varchar) like '" + searchedTxt + "%' then 2 else 4 end");
+        qry->exec();
+        modal->setQuery(*qry);
+        ui->tableView->setModel(modal);
+        myDB.close();
+    }
+}
+
