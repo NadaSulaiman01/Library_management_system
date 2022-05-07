@@ -4,6 +4,7 @@
 #include <QMessageBox>
 Homepage *h4;
 bool select_return_book = false;
+bool IDedit_rtrn = false;
 QString val3;
 QString val4;
 Returnbook::Returnbook(QWidget *parent) :
@@ -57,6 +58,9 @@ void Returnbook::on_comboBox_sort_currentTextChanged(const QString &arg1)
 }
 
 void Returnbook::recieveCombo(){
+    if (!IDedit_rtrn) {
+        ui->lineEdit->clear();
+    }
     QString sort = ui->comboBox_sort->currentText();
     QString searchedTxt = ui->lineEdit->text();
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
@@ -151,5 +155,42 @@ void Returnbook::on_pushButton_refresh_clicked()
     modal->setQuery(*qry);
     ui->tableView->setModel(modal);}
       myDB.close();
+}
+
+
+void Returnbook::on_lineEdit_textEdited(const QString &arg1)
+{
+    IDedit_rtrn = true;
+    ui->comboBox_sort->setCurrentText("None");
+    QString searchedTxt = ui->lineEdit->text();
+    QSqlDatabase myDB = QSqlDatabase::addDatabase("QSQLITE");
+    QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
+    myDB.setDatabaseName(database_path);
+    if(!myDB.open()){
+         QMessageBox::warning(this,"Problem in database", "Failed to open the database.");
+    }
+    QSqlQueryModel *modal = new QSqlQueryModel();
+    QSqlQuery *qry = new QSqlQuery(myDB);
+
+    if (searchedTxt.isEmpty()) {
+        qry->prepare("SELECT borrow.*,"
+                      "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow");
+        qry->exec();
+        modal->setQuery(*qry);
+        ui->tableView->setModel(modal);
+        myDB.close();
+    }
+    else {
+        qry->prepare("SELECT borrow.*,"
+                     "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow"
+                     " where Cast(member_id as varchar) like '%" + searchedTxt + "%' order by"
+                     " case when Cast(member_id as varchar) = " + searchedTxt + " then 1"
+                     " when Cast(member_id as varchar) like '" + searchedTxt + "%' then 2 else 4 end");
+        qry->exec();
+        modal->setQuery(*qry);
+        ui->tableView->setModel(modal);
+        myDB.close();
+    }
+    IDedit_rtrn = false;
 }
 
