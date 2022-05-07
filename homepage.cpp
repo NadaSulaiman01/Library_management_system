@@ -9,7 +9,7 @@ Homepage::Homepage(QWidget *parent) :
     ui->widget->setStyleSheet("background-color:rgba(255,249,225,0.4);");
     QString sty2 = "QPushButton {"
 
-            "font: 14pt;"
+            "font: 16pt 'Javanese Text';"
             " background-color: rgb(255, 251, 233);"
             "color:rgb(111, 76, 19);"
                  "}"
@@ -18,12 +18,12 @@ Homepage::Homepage(QWidget *parent) :
             "background-color: rgb(111, 76, 19);"
             "}";
     ui->pushButton_7->setStyleSheet(sty2);
-    ui->pushButton->setStyleSheet(sty2);
-    ui->pushButton_2->setStyleSheet(sty2);
+//    ui->pushButton->setStyleSheet(sty2);
+   // ui->pushButton_2->setStyleSheet(sty2);
     ui->pushButton_3->setStyleSheet(sty2);
-    ui->pushButton_4->setStyleSheet(sty2);
-    ui->pushButton_5->setStyleSheet(sty2);
-    ui->pushButton_6->setStyleSheet(sty2);
+   // ui->pushButton_4->setStyleSheet(sty2);
+   // ui->pushButton_5->setStyleSheet(sty2);
+   // ui->pushButton_6->setStyleSheet(sty2);
     ui->pushButton_8->setStyleSheet(sty2);
 }
 
