@@ -6,7 +6,7 @@ Homepage *h3;
 
 bool select_delete_member =false;
 bool select_edit_member = false;
-bool edit = false;
+bool IDedit_memb = false;
 QString val2;
 Viewmemberlist::Viewmemberlist(QWidget *parent) :
     QMainWindow(parent),
@@ -79,10 +79,7 @@ void Viewmemberlist::on_tableView_clicked(const QModelIndex &index)
      }
     //bookno = ui->tableView->model()->index();
     val2 = ui->tableView->model()->data(index).toString();
-
-
 }
-
 
 void Viewmemberlist::on_pushButton_deletemember_clicked()
 {
@@ -184,7 +181,7 @@ void Viewmemberlist::on_comboBox_sort_currentTextChanged(const QString &arg1)
 }
 
 void Viewmemberlist::recieveCombo(){
-    if (!edit) {
+    if (!IDedit_memb) {
         ui->lineEdit->clear();
     }
     QString sort = ui->comboBox_sort->currentText();
@@ -226,7 +223,7 @@ void Viewmemberlist::recieveCombo(){
 
 void Viewmemberlist::on_lineEdit_textEdited(const QString &arg1)
 {
-    edit = true;
+    IDedit_memb = true;
     ui->comboBox_sort->setCurrentText("None");
     QString searchedTxt = ui->lineEdit->text();
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
@@ -257,6 +254,6 @@ void Viewmemberlist::on_lineEdit_textEdited(const QString &arg1)
         ui->tableView->setModel(modal);
         myDB.close();
     }
-    edit = false;
+    IDedit_memb = false;
 }
 
