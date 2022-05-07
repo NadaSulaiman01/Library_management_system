@@ -6,6 +6,7 @@ Homepage *h3;
 
 bool select_delete_member =false;
 bool select_edit_member = false;
+bool edit = false;
 QString val2;
 Viewmemberlist::Viewmemberlist(QWidget *parent) :
     QMainWindow(parent),
@@ -149,15 +150,8 @@ void Viewmemberlist::on_pushButton_editMember_clicked()
          sl.append(qry.value(3).toString());
          sl.append(qry.value(4).toString());
          sl.append(qry.value(5).toString());
-
-
      }
-
-
     }
-
-
-
     emit sendData(sl);
     myDB.close();
     }
@@ -190,6 +184,9 @@ void Viewmemberlist::on_comboBox_sort_currentTextChanged(const QString &arg1)
 }
 
 void Viewmemberlist::recieveCombo(){
+    if (!edit) {
+        ui->lineEdit->clear();
+    }
     QString sort = ui->comboBox_sort->currentText();
     QString searchedTxt = ui->lineEdit->text();
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
@@ -229,7 +226,8 @@ void Viewmemberlist::recieveCombo(){
 
 void Viewmemberlist::on_lineEdit_textEdited(const QString &arg1)
 {
-//    QString chosen_genre = ui->comboBox_gserach->currentText();
+    edit = true;
+    ui->comboBox_sort->setCurrentText("None");
     QString searchedTxt = ui->lineEdit->text();
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
     myDB = QSqlDatabase::addDatabase("QSQLITE");
@@ -259,5 +257,6 @@ void Viewmemberlist::on_lineEdit_textEdited(const QString &arg1)
         ui->tableView->setModel(modal);
         myDB.close();
     }
+    edit = false;
 }
 
