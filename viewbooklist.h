@@ -44,8 +44,6 @@ private slots:
 
     void on_Addbook_clicked();
 
-    void on_lineEdit_textChanged(const QString &arg1);
-
     void on_pushButton_3_clicked();
 
     void on_pushButton_4_clicked();

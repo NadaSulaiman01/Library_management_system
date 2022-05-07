@@ -165,13 +165,6 @@ void Viewbooklist::on_Addbook_clicked()
 
 }
 
-
-void Viewbooklist::on_lineEdit_textChanged(const QString &arg1)
-{
-
-}
-
-
 void Viewbooklist::on_pushButton_3_clicked()
 { QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
     myDB = QSqlDatabase::addDatabase("QSQLITE");
