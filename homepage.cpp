@@ -18,13 +18,16 @@ Homepage::Homepage(QWidget *parent) :
             "background-color: rgb(111, 76, 19);"
             "}";
     ui->pushButton_7->setStyleSheet(sty2);
+    ui->pushButton_7->setToolTip("Add, delete book, insert book to member");
 //    ui->pushButton->setStyleSheet(sty2);
    // ui->pushButton_2->setStyleSheet(sty2);
     ui->pushButton_3->setStyleSheet(sty2);
+     ui->pushButton_3->setToolTip("Add, delete members");
    // ui->pushButton_4->setStyleSheet(sty2);
    // ui->pushButton_5->setStyleSheet(sty2);
    // ui->pushButton_6->setStyleSheet(sty2);
     ui->pushButton_8->setStyleSheet(sty2);
+     ui->pushButton_8->setToolTip("return borrowed books");
 }
 
 Homepage::~Homepage()

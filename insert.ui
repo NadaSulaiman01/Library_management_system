@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>482</width>
+    <height>303</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,6 +85,9 @@ font: 14pt &quot;Segoe UI&quot;;</string>
             <property name="styleSheet">
              <string notr="true">color:rgb(111, 76, 19);
 font: 12pt &quot;Segoe UI&quot;;</string>
+            </property>
+            <property name="dragEnabled">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -193,6 +196,9 @@ font: 14pt &quot;Segoe UI&quot;;</string>
 font: 12pt &quot;Segoe UI&quot;;</string>
             </property>
             <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
              <string>YYYY-MM-DD</string>
             </property>
            </widget>

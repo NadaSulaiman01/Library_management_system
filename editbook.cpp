@@ -14,7 +14,7 @@ Editbook::~Editbook()
 }
 void Editbook::resizeEvent(QResizeEvent* evt)
 {
-    QPixmap bkgnd(":/image/image/back.jpg");
+    QPixmap bkgnd(":/image/image/bck.jpg");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QPalette palette;
@@ -28,9 +28,9 @@ void Editbook::recieveData(QStringList sl){
     ui->lineEdit_ID->setText(sl[0]);
     ui->lineEdit_title->setText(sl[1]);
     ui->lineEdit_author->setText(sl[2]);
-    ui->lineEdit_quantity->setText(sl[3]);
-    ui->comboBox_genre->setCurrentText(sl[4]);
-    ui->lineEdit_location->setText(sl[5]);
+    ui->lineEdit_quantity->setText(sl[5]);
+    ui->comboBox_genre->setCurrentText(sl[3]);
+    ui->lineEdit_location->setText(sl[4]);
 
 }
 
@@ -58,16 +58,17 @@ void Editbook::on_pushButton_save_clicked()
     // ui -> comboBox->currentText();
     Quantity = ui->lineEdit_quantity->text();
     QSqlQuery qry;
-    qry.prepare("update books set book_title='"+title+"',author_name='"+author+"',quantity='"+Quantity+"',genre='"+genre+"',book_place='"+location+"' where book_id='"+id+"'");
+    qry.prepare("update books set book_title='"+title+"',author_name='"+author+"',available_quantity='"+Quantity+"',genre='"+genre+"',book_place='"+location+"' where book_id='"+id+"'");
 
 
     if(!qry.exec()){
-    qDebug() << "Couldn't edit the entry";
+    //qDebug() << "Couldn't edit the entry";
+        QMessageBox::warning(this,"Couldn't edit book details", "Sorry, your request cannot be accomodated. Please make sure you enter valid data and you don't turn this book to an already existing one.");
     }
-
+    else{
      myDB.close();
 
      hide();
-
+    }
 }
 

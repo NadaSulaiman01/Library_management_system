@@ -53,10 +53,33 @@ Viewmemberlist::~Viewmemberlist()
 {
     delete ui;
 }
+void Viewmemberlist::resizeEvent(QResizeEvent* evt)
+{
+    ui->pushButton_return->setToolTip("return");
+       ui->pushButton_refresh->setToolTip("refresh");
+    QPixmap bkgnd(":/image/image/bck.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
+    QPalette palette;
+
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+    QMainWindow::resizeEvent(evt); // call inherited implementation
+
+
+        QPixmap pixmap(":/image/image/ref.png");
+                QIcon ButtonIcon(pixmap);
+        ui->pushButton_refresh->setIcon(ButtonIcon);
+        QPixmap pixmap2(":/image/image/ret.png");
+                QIcon ButtonIcon2(pixmap2);
+        ui->pushButton_return->setIcon(ButtonIcon2);
+
+}
 void Viewmemberlist::on_pushButton_clicked()
 {
     finalmember = new Finalmember(this);
+    finalmember->setModal(true);
     finalmember->show();
 }
 
@@ -94,6 +117,7 @@ void Viewmemberlist::on_pushButton_deletemember_clicked()
                  QMessageBox::warning(this,"Problem in database", "Failed to open the database.");
             }
      select_delete_member = false;
+     select_edit_member = false;
      QMessageBox msgBox;
     // QString booknom = QString::number(bookno);
     // QString question ="Are you sure you want to delete book no." + booknom + "?";
@@ -104,8 +128,8 @@ void Viewmemberlist::on_pushButton_deletemember_clicked()
           QSqlQuery qry;
           qry.prepare("Delete from members where member_id='"+val2+"' or member_name='"+val2+"' or member_phone	='"+val2+"' or sub_startDate='"+val2+"' or sub_endDate='"+val2+"'");
           if(!qry.exec()){
-          qDebug() << "Couldn't Delete the entry ";
-
+          //qDebug() << "Couldn't Delete the entry ";
+          QMessageBox::warning(this,"Couldn't delete member", "Sorry, the member couldn't be deleted.");
           }
 
       } else {
@@ -122,7 +146,7 @@ void Viewmemberlist::on_pushButton_editMember_clicked()
     editmember = new EditMember(this);
 
     if (!select_edit_member){
-       QMessageBox::warning(this,"Couldn't edit member details", "Please select a member to edit from the table.");
+       QMessageBox::warning(this,"Couldn't edit member information", "Please select a member to edit their information from the table.");
     }
     else{
 
@@ -133,6 +157,8 @@ void Viewmemberlist::on_pushButton_editMember_clicked()
                  QMessageBox::warning(this,"Problem in database", "Failed to open the database.");
             }
      select_edit_member = false;
+     select_delete_member= false;
+     editmember->setModal(true);
        editmember->show();
          connect(this, SIGNAL(sendData(QStringList)), editmember, SLOT(recieveData(QStringList)));
       QStringList sl;

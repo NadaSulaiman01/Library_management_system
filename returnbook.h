@@ -17,6 +17,8 @@ class Returnbook : public QMainWindow
 public:
     explicit Returnbook(QWidget *parent = nullptr);
     ~Returnbook();
+protected:
+ void resizeEvent(QResizeEvent* evt) override;
 signals:
     void sendCombo();
 
@@ -24,7 +26,7 @@ signals:
 private slots:
 
      void recieveCombo();
-
+     void setTableWidth();
     void on_pushButton_returnToHome_clicked();
 
     void on_comboBox_sort_currentTextChanged(const QString &arg1);

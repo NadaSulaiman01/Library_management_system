@@ -120,31 +120,6 @@ font: 12pt &quot;Segoe UI&quot;;</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="label_9">
-            <property name="styleSheet">
-             <string notr="true">color:rgb(111, 76, 19);
-font: 14pt &quot;Segoe UI&quot;;</string>
-            </property>
-            <property name="text">
-             <string>Quantity</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_quantity">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color:rgb(111, 76, 19);
-font: 12pt &quot;Segoe UI&quot;;</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -260,34 +235,7 @@ font: 14pt &quot;Segoe UI&quot;;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_av">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color:rgb(111, 76, 19);
-font: 12pt &quot;Segoe UI&quot;;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_13">
-            <property name="styleSheet">
-             <string notr="true">color:rgb(111, 76, 19);
-font: 14pt &quot;Segoe UI&quot;;
-
-</string>
-            </property>
-            <property name="text">
-             <string>No. of borrowed copies</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_borrow">
+           <widget class="QLineEdit" name="lineEdit_quantity">
             <property name="minimumSize">
              <size>
               <width>0</width>

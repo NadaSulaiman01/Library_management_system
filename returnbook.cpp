@@ -28,13 +28,15 @@ Returnbook::Returnbook(QWidget *parent) :
                   "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow");
     qry->exec();
     modal->setQuery(*qry);
-    ui->tableView->setModel(modal);}
+    ui->tableView->setModel(modal);
+      setTableWidth();}
       else {
     qry->prepare("SELECT borrow.*,"
                   "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow ORDER BY borrowed_daysLeft");
     qry->exec();
     modal->setQuery(*qry);
-    ui->tableView->setModel(modal);}
+    ui->tableView->setModel(modal);
+      setTableWidth();}
       myDB.close();
 }
 
@@ -42,7 +44,29 @@ Returnbook::~Returnbook()
 {
     delete ui;
 }
+void Returnbook::resizeEvent(QResizeEvent* evt)
+{
+    ui->pushButton_returnToHome->setToolTip("return");
+       ui->pushButton_refresh->setToolTip("refresh");
+    QPixmap bkgnd(":/image/image/bck.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
+    QPalette palette;
+
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+    QMainWindow::resizeEvent(evt); // call inherited implementation
+
+
+        QPixmap pixmap(":/image/image/ref.png");
+                QIcon ButtonIcon(pixmap);
+        ui->pushButton_refresh->setIcon(ButtonIcon);
+        QPixmap pixmap2(":/image/image/ret.png");
+                QIcon ButtonIcon2(pixmap2);
+        ui->pushButton_returnToHome->setIcon(ButtonIcon2);
+
+}
 void Returnbook::on_pushButton_returnToHome_clicked()
 {
     h4 = new Homepage(this);
@@ -76,13 +100,15 @@ void Returnbook::recieveCombo(){
                     "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow");
       qry->exec();
       modal->setQuery(*qry);
-      ui->tableView->setModel(modal);}
+      ui->tableView->setModel(modal);
+        setTableWidth();}
         else {
       qry->prepare("SELECT borrow.*,"
                     "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow ORDER BY borrowed_daysLeft");
       qry->exec();
       modal->setQuery(*qry);
-      ui->tableView->setModel(modal);}
+      ui->tableView->setModel(modal);
+        setTableWidth();}
         myDB.close();
 
 
@@ -91,7 +117,7 @@ void Returnbook::recieveCombo(){
 void Returnbook::on_pushButton_returnbook_clicked()
 {
     if (!select_return_book){
-       QMessageBox::warning(this,"Couldn't return book", "Please select one book to return from the table.");
+       QMessageBox::warning(this,"Couldn't return book", "Please select a book to return from the table.");
     }
     else{ QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
         QSqlDatabase myDB = QSqlDatabase::addDatabase("QSQLITE");
@@ -109,7 +135,8 @@ void Returnbook::on_pushButton_returnbook_clicked()
           QSqlQuery qry2;
           qry2.prepare("Delete from borrow where book_id='"+val3+"' AND member_id='"+val4+"'");
         if (!qry2.exec()){
-            qDebug()<< "Couldn't return book";
+           // qDebug()<< "Couldn't return book";
+             QMessageBox::warning(this,"Couldn't return book", "Sorry, the book could not be returned");
 
       } else {
 
@@ -147,13 +174,15 @@ void Returnbook::on_pushButton_refresh_clicked()
                   "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow");
     qry->exec();
     modal->setQuery(*qry);
-    ui->tableView->setModel(modal);}
+    ui->tableView->setModel(modal);
+      setTableWidth();}
       else {
     qry->prepare("SELECT borrow.*,"
                   "Cast ((JULIANDAY(return_date)-JULIANDAY('now')) As Integer)+1 AS borrowed_daysLeft FROM borrow ORDER BY borrowed_daysLeft");
     qry->exec();
     modal->setQuery(*qry);
-    ui->tableView->setModel(modal);}
+    ui->tableView->setModel(modal);
+      setTableWidth();}
       myDB.close();
 }
 
@@ -178,6 +207,7 @@ void Returnbook::on_lineEdit_textEdited(const QString &arg1)
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        setTableWidth();
         myDB.close();
     }
     else {
@@ -189,8 +219,17 @@ void Returnbook::on_lineEdit_textEdited(const QString &arg1)
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        setTableWidth();
         myDB.close();
     }
     IDedit_rtrn = false;
 }
 
+void Returnbook::setTableWidth(){
+    ui->tableView->setColumnWidth(1,180);
+     ui->tableView->setColumnWidth(4,350);
+      ui->tableView->setColumnWidth(5,180);
+       ui->tableView->setColumnWidth(8,130);
+
+    return;
+}

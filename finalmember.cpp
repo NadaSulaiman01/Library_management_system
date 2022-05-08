@@ -1,6 +1,7 @@
 #include "finalmember.h"
 #include "ui_finalmember.h"
 #include <QMessageBox>
+#include <QTime>
 
 Finalmember::Finalmember(QWidget *parent) :
     QDialog(parent),
@@ -15,7 +16,7 @@ Finalmember::~Finalmember()
 }
 void Finalmember::resizeEvent(QResizeEvent* evt)
 {
-    QPixmap bkgnd(":/image/image/back.jpg");
+    QPixmap bkgnd(":/image/image/bck.jpg");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QPalette palette;
@@ -41,11 +42,13 @@ void Finalmember::on_pushButton_save_clicked()
    }
 
 QString first_name, last_name, sub_date, end_date, phone_num;
-
+QDateTime datee = QDateTime::currentDateTime();
+QString formattedTime = datee.toString("yyyy-MM-dd");
+QByteArray formattedTimeMsg = formattedTime.toLocal8Bit();
 first_name = ui->lineEdit_fname->text();
 last_name = ui->lineEdit_lastname->text();
 phone_num = ui->lineEdit_pnum->text();
-sub_date = ui->lineEdit_subdate->text();
+sub_date = formattedTime;
 end_date = ui->lineEdit_enddate->text();
 QString full_name = first_name + " " + last_name;
 QSqlQuery qry;
@@ -61,11 +64,12 @@ qry.addBindValue(sub_date);
 qry.addBindValue(end_date);
 
 if(!qry.exec()){
-qDebug() << "Couldn't add new entries ";
+QMessageBox::warning(this,"Couldn't add member", "Sorry, your request cannot be accomodated. Please make sure you enter valid data and the member phone number isn't used in another entry.");
 
 }
-
+else{
  myDB.close();
     hide();
+}
 }
 

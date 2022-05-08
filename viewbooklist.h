@@ -23,6 +23,9 @@ class Viewbooklist : public QMainWindow
 public:
     explicit Viewbooklist(QWidget *parent = nullptr);
     ~Viewbooklist();
+protected:
+ void resizeEvent(QResizeEvent* evt) override;
+
 //signals:
 //  void sendSignal();
 signals:
@@ -31,6 +34,7 @@ signals:
   void sendData2(QStringList);
   void sendCombo();
 private slots:
+//  void styl();
    void recieveCombo();
    void recieveRef();
     void on_pushButton_clicked();
@@ -57,6 +61,8 @@ private slots:
     void on_comboBox_gserach_currentTextChanged(const QString &arg1);
 
     void on_lineEdit_textEdited(const QString &arg1);
+
+    //void on_label_linkActivated(const QString &link);
 
 public:
     QSqlDatabase myDB;

@@ -13,6 +13,18 @@ EditMember::~EditMember()
 {
     delete ui;
 }
+void EditMember::resizeEvent(QResizeEvent* evt)
+{
+    QPixmap bkgnd(":/image/image/bck.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    QPalette palette;
+
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+    QDialog::resizeEvent(evt); // call inherited implementation
+}
 void EditMember::recieveData(QStringList sl){
     ui->lineEdit_mID->setText(sl[0]);
     ui->lineEdit_name->setText(sl[1]);
@@ -51,12 +63,14 @@ void EditMember::on_pushButton_save_clicked()
 
 
     if(!qry.exec()){
-    qDebug() << "Couldn't edit the entry";
+    //qDebug() << "Couldn't edit the entry";
+        QMessageBox::warning(this,"Couldn't edit member info", "Sorry, your request cannot be accomodated. Please make sure you enter valid data and you don't turn this phone number to another that already exists in the table.");
     }
-
+    else{
      myDB.close();
 
-     hide();
+     hide();}
 
 }
+
 

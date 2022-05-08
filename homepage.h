@@ -20,7 +20,8 @@ public:
     ~Homepage();
 protected:
  void resizeEvent(QResizeEvent* evt) override;
-
+//signals:
+//  void sendStyl();
 private slots:
 
 

@@ -16,7 +16,8 @@ class EditMember : public QDialog
 public:
     explicit EditMember(QWidget *parent = nullptr);
     ~EditMember();
-
+protected:
+ void resizeEvent(QResizeEvent* evt) override;
 private slots:
    void recieveData(QStringList);
 

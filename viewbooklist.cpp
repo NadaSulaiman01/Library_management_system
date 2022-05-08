@@ -2,7 +2,7 @@
 #include "ui_viewbooklist.h"
 #include "homepage.h"
 #include <QMessageBox>
-
+int av_copies;
 bool shared;
 bool select_delete_book = false;
 bool select_edit_book = false;
@@ -15,11 +15,18 @@ Homepage *h2;
 Viewbooklist::Viewbooklist(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Viewbooklist)
-{  /* connOpen();*/
+{
+
+    /* connOpen();*/
+//    QPixmap pixmap(":/image/image/ref.png");
+//            QIcon ButtonIcon(pixmap);
+//    ui->pushButton_3->setIcon(ButtonIcon);
+  //  ui->pushButton_3->setIconSize(pixmap.rect().size());
+  //  ui->pushButton_3->setIcon(QIcon(":/image/image/ref.png"));
     shared = false;
     ui->setupUi(this);
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
-    //qDebug()<< database_path;
+    qDebug()<< database_path;
     myDB = QSqlDatabase::addDatabase("QSQLITE");
    // QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
     myDB.setDatabaseName(database_path);
@@ -37,7 +44,13 @@ Viewbooklist::Viewbooklist(QWidget *parent) :
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
-
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
 
     }
@@ -47,6 +60,13 @@ Viewbooklist::Viewbooklist(QWidget *parent) :
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
     }
 
@@ -56,7 +76,29 @@ Viewbooklist::~Viewbooklist()
 {
     delete ui;
 }
+void Viewbooklist::resizeEvent(QResizeEvent* evt)
+{
+    ui->pushButton->setToolTip("return");
+       ui->pushButton_3->setToolTip("refresh");
+    QPixmap bkgnd(":/image/image/bck.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
+    QPalette palette;
+
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+    QMainWindow::resizeEvent(evt); // call inherited implementation
+
+
+        QPixmap pixmap(":/image/image/ref.png");
+                QIcon ButtonIcon(pixmap);
+        ui->pushButton_3->setIcon(ButtonIcon);
+        QPixmap pixmap2(":/image/image/ret.png");
+                QIcon ButtonIcon2(pixmap2);
+        ui->pushButton->setIcon(ButtonIcon2);
+
+}
 void Viewbooklist::on_pushButton_clicked()
 {
   h2 = new Homepage(this);
@@ -71,10 +113,15 @@ void Viewbooklist::on_pushButton_2_clicked()
     insert = new Insert(this);
 
     if (!select_insert_book){
-       QMessageBox::warning(this,"Couldn't find book", "Please select one book to insert from the table.");
+       QMessageBox::warning(this,"Couldn't find book", "Please select a book to insert from the table.");
     }
     else{
-
+       if (av_copies==0){
+           select_insert_book = false;
+           select_delete_book = false;
+           select_edit_book = false;
+        QMessageBox::warning(this,"Not enough books", "There aren't any available copies of that book to insert to members.");
+       return;}
             myDB = QSqlDatabase::addDatabase("QSQLITE");
 QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
             myDB.setDatabaseName(database_path);
@@ -82,7 +129,11 @@ QString database_path= QCoreApplication::applicationDirPath() + "/library_system
                  QMessageBox::warning(this,"Problem in database", "Failed to open the database.");
             }
      select_insert_book = false;
+     select_delete_book = false;
+     select_edit_book = false;
+      insert->setModal(true);
        insert->show();
+
          connect(this, SIGNAL(sendData2(QStringList)), insert, SLOT(recieveData2(QStringList)));
       QStringList sl;
     QSqlQuery qry;
@@ -130,11 +181,14 @@ QString database_path= QCoreApplication::applicationDirPath() + "/library_system
                  QMessageBox::warning(this,"Problem in database", "Failed to open the database.");
             }
      select_edit_book = false;
+     select_insert_book = false;
+     select_delete_book = false;
+     editbook->setModal(true);
        editbook->show();
          connect(this, SIGNAL(sendData(QStringList)), editbook, SLOT(recieveData(QStringList)));
       QStringList sl;
     QSqlQuery qry;
-    qry.prepare("select * from books where book_id='"+val+"' or book_title='"+val+"' or author_name='"+val+"' or quantity='"+val+"' or genre='"+val+"'or book_place='"+val+"'");
+    qry.prepare("select * from books where book_id='"+val+"' or book_title='"+val+"' or author_name='"+val+"' or available_quantity='"+val+"' or genre='"+val+"'or book_place='"+val+"' or borrowed_quantity='"+val+"'");
     if(qry.exec())
     {
      while(qry.next()){
@@ -144,6 +198,7 @@ QString database_path= QCoreApplication::applicationDirPath() + "/library_system
          sl.append(qry.value(3).toString());
          sl.append(qry.value(4).toString());
          sl.append(qry.value(5).toString());
+         sl.append(qry.value(6).toString());
 
      }
 
@@ -161,6 +216,7 @@ QString database_path= QCoreApplication::applicationDirPath() + "/library_system
 void Viewbooklist::on_Addbook_clicked()
 {
     addbook = new Addbook(this);
+    addbook->setModal(true);
     addbook->show();
 
 }
@@ -184,7 +240,13 @@ void Viewbooklist::on_pushButton_3_clicked()
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
-
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
 
     }
@@ -194,6 +256,13 @@ void Viewbooklist::on_pushButton_3_clicked()
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
     }
 
@@ -218,6 +287,8 @@ void Viewbooklist::on_pushButton_deleteBook_clicked()
                  QMessageBox::warning(this,"Problem in database", "Failed to open the database.");
             }
      select_delete_book = false;
+     select_insert_book = false;
+     select_edit_book = false;
      QMessageBox msgBox;
     // QString booknom = QString::number(bookno);
     // QString question ="Are you sure you want to delete book no." + booknom + "?";
@@ -227,7 +298,7 @@ void Viewbooklist::on_pushButton_deleteBook_clicked()
       if (reply == QMessageBox::Yes) {
           QSqlQuery qry, qry2, qry3;
           QStringList sl;
-          qry2.prepare("select * from books where book_id='"+val+"' or book_title='"+val+"' or author_name='"+val+"' or quantity='"+val+"' or genre='"+val+"'or book_place='"+val+"'");
+          qry2.prepare("select * from books where book_id='"+val+"' or book_title='"+val+"' or author_name='"+val+"' or available_quantity='"+val+"' or genre='"+val+"'or book_place='"+val+"' or borrowed_quantity='"+val+"'");
           if(qry2.exec())
           {
            while(qry2.next()){
@@ -245,14 +316,14 @@ void Viewbooklist::on_pushButton_deleteBook_clicked()
            if (!qry3.exec()){
                qDebug() << "Couldn't delete from borrow";}
 
-           QString borrow= sl[0];
-            qDebug() << borrow;
+//           QString borrow= sl[0];
+//            qDebug() << borrow;
           }
-          qry.prepare("Delete from books where book_id='"+val+"' or book_title='"+val+"' or author_name='"+val+"' or quantity='"+val+"' or genre='"+val+"'or book_place='"+val+"'");
+          qry.prepare("Delete from books where book_id='"+val+"' or book_title='"+val+"' or author_name='"+val+"' or available_quantity='"+val+"' or genre='"+val+"'or book_place='"+val+"' or borrowed_quantity='"+val+"'");
            //connect(this, SIGNAL(sendRefresh(QStringList)), editbook, SLOT(recieveRefresh(QStringList)));
           if(!qry.exec()){
-          qDebug() << "Couldn't Delete the entry ";
-
+         // qDebug() << "Couldn't Delete the entry ";
+         QMessageBox::warning(this,"Couldn't delete book", "Sorry, the book couldn't be deleted");
           }
 
 
@@ -271,6 +342,7 @@ void Viewbooklist::on_tableView_clicked(const QModelIndex &index)
     select_insert_book = true;
     //bookno = ui->tableView->model()->index();
     val = ui->tableView->model()->data(index).toString();
+    av_copies = ui->tableView->model()->index(index.row(),5).data().toInt();
 
 }
 void Viewbooklist::recieveRef(){
@@ -290,6 +362,13 @@ QString database_path= QCoreApplication::applicationDirPath() + "/library_system
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
 
         myDB.close();
 
@@ -299,16 +378,23 @@ QString database_path= QCoreApplication::applicationDirPath() + "/library_system
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
     }
-    qDebug() << "No refresh needed";
+  //  qDebug() << "No refresh needed";
  //   modal->clear();
 }
 
 
 void Viewbooklist::on_comboBox_gserach_currentTextChanged(const QString &arg1)
 {
-    qDebug()<< arg1;
+   // qDebug()<< arg1;
     connect(this,SIGNAL(sendCombo()), this, SLOT(recieveCombo()));
     emit sendCombo();
 
@@ -333,6 +419,13 @@ void Viewbooklist::recieveCombo(){
                 qry->exec();
                 modal->setQuery(*qry);
                 ui->tableView->setModel(modal);
+                ui->tableView->setColumnWidth(1,350);
+                 ui->tableView->setColumnWidth(2,180);
+                  ui->tableView->setColumnWidth(3,100);
+                 ui->tableView->setColumnWidth(4,100);
+                  ui->tableView->setColumnWidth(5,130);
+                  ui->tableView->setColumnWidth(6,130);
+                   ui->tableView->setColumnWidth(7,120);
                 myDB.close();
             } else {
                 qry->prepare("SELECT books.*,"
@@ -346,6 +439,13 @@ void Viewbooklist::recieveCombo(){
                 qry->exec();
                 modal->setQuery(*qry);
                 ui->tableView->setModel(modal);
+                ui->tableView->setColumnWidth(1,350);
+                 ui->tableView->setColumnWidth(2,180);
+                  ui->tableView->setColumnWidth(3,100);
+                 ui->tableView->setColumnWidth(4,100);
+                  ui->tableView->setColumnWidth(5,130);
+                  ui->tableView->setColumnWidth(6,130);
+                   ui->tableView->setColumnWidth(7,120);
                 myDB.close();
             }
         } else {
@@ -358,6 +458,13 @@ void Viewbooklist::recieveCombo(){
                 qry->exec();
                 modal->setQuery(*qry);
                 ui->tableView->setModel(modal);
+                ui->tableView->setColumnWidth(1,350);
+                 ui->tableView->setColumnWidth(2,180);
+                  ui->tableView->setColumnWidth(3,100);
+                 ui->tableView->setColumnWidth(4,100);
+                  ui->tableView->setColumnWidth(5,130);
+                  ui->tableView->setColumnWidth(6,130);
+                   ui->tableView->setColumnWidth(7,120);
                 myDB.close();
             } else {
                 qry->prepare("SELECT books.*,"
@@ -406,6 +513,13 @@ void Viewbooklist::on_lineEdit_textEdited(const QString &arg1)
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
     }
     else if (searchedTxt.isEmpty()) {
@@ -414,6 +528,13 @@ void Viewbooklist::on_lineEdit_textEdited(const QString &arg1)
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
     }
     else if (chosen_genre == "All") {
@@ -422,6 +543,13 @@ void Viewbooklist::on_lineEdit_textEdited(const QString &arg1)
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
     }
     else {
@@ -430,6 +558,13 @@ void Viewbooklist::on_lineEdit_textEdited(const QString &arg1)
         qry->exec();
         modal->setQuery(*qry);
         ui->tableView->setModel(modal);
+        ui->tableView->setColumnWidth(1,350);
+         ui->tableView->setColumnWidth(2,180);
+          ui->tableView->setColumnWidth(3,100);
+         ui->tableView->setColumnWidth(4,100);
+          ui->tableView->setColumnWidth(5,130);
+          ui->tableView->setColumnWidth(6,130);
+           ui->tableView->setColumnWidth(7,120);
         myDB.close();
     }
 }

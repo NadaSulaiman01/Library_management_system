@@ -37,7 +37,7 @@ Insert::~Insert()
 }
 void Insert::resizeEvent(QResizeEvent* evt)
 {
-    QPixmap bkgnd(":/image/image/back.jpg");
+    QPixmap bkgnd(":/image/image/bck.jpg");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QPalette palette;
@@ -90,12 +90,14 @@ void Insert::on_pushButton_insert_clicked()
 
 
     if(!qry.exec()){
-    qDebug() << "Couldn't insert book to member";
+   // qDebug() << "Couldn't insert book to member";
+    QMessageBox::warning(this,"Couldn't insert book to member", "Sorry, your request cannot be accomodated. Please make sure you enter valid date and that the member doesn't already have the book.");
     }
 //    viewbooklist = new Viewbooklist(this);
+    else{
        myDB.close();
       // emit sendRef();
-       hide();
+       hide();}
 }
 
 

@@ -1,12 +1,10 @@
 <RCC>
     <qresource prefix="/image">
-        <file>image/1_edited.jpg</file>
         <file>image/Iconsmind-Outline-Library-2.ico</file>
-        <file>image/lib.jpg</file>
         <file>image/Revonextsoft_LMS_librarymanagementsystem2-1030x427.jpeg</file>
-        <file>image/lib_edited.jpg</file>
         <file>image/final.jpg</file>
-        <file>image/back.jpg</file>
         <file>image/ref.png</file>
+        <file>image/ret.png</file>
+        <file>image/bck.jpg</file>
     </qresource>
 </RCC>

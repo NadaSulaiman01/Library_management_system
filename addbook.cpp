@@ -1,4 +1,5 @@
 #include "addbook.h"
+#include <QMessageBox>
 #include "ui_addbook.h"
 #include "viewbooklist.h"
 #include "QSqlQuery"
@@ -18,7 +19,7 @@ Addbook::~Addbook()
 }
 void Addbook::resizeEvent(QResizeEvent* evt)
 {
-    QPixmap bkgnd(":/image/image/back.jpg");
+    QPixmap bkgnd(":/image/image/bck.jpg");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QPalette palette;
@@ -27,6 +28,12 @@ void Addbook::resizeEvent(QResizeEvent* evt)
     this->setPalette(palette);
 
     QDialog::resizeEvent(evt); // call inherited implementation
+
+
+//        QPixmap pixmap(":/image/image/ref.png");
+//                QIcon ButtonIcon(pixmap);
+//        ui->pushButton->setIcon(ButtonIcon);
+//        ui->pushButton->setIconSize(pixmap.rect().size());
 }
 
 void Addbook::on_pushButton_clicked()
@@ -50,25 +57,28 @@ void Addbook::on_pushButton_clicked()
     qry.prepare("INSERT INTO books ("
                 "book_title,"
                 "author_name,"
-                "quantity,"
                 "genre,"
-                "book_place)"
+                "book_place,"
+                "available_quantity)"
                 "VALUES (?,?,?,?,?);");
     qry.addBindValue(title);
     qry.addBindValue(author);
-    qry.addBindValue(Quantity);
     qry.addBindValue(genre);
     qry.addBindValue(location);
+    qry.addBindValue(Quantity);
 
     if(!qry.exec()){
-    qDebug() << "Couldn't add new entries ";
+        QMessageBox::warning(this,"Couldn't add book", "Sorry, your request cannot be accomodated. Please make sure you enter valid data and the book doesn't already exist.");
+   // qDebug() << "Couldn't add new entries ";
     }
+    else{
     viewbooklist = new Viewbooklist(this);
      connect(this, SIGNAL(sendRef()), viewbooklist, SLOT(recieveRef()));
 
      myDB.close();
      emit sendRef();
      hide();
+    }
 
 }
 
