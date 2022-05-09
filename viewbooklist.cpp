@@ -3,6 +3,7 @@
 #include "homepage.h"
 #include <QMessageBox>
 int av_copies;
+int bo_copies;
 bool shared;
 bool select_delete_book = false;
 bool select_edit_book = false;
@@ -25,6 +26,25 @@ Viewbooklist::Viewbooklist(QWidget *parent) :
   //  ui->pushButton_3->setIcon(QIcon(":/image/image/ref.png"));
     shared = false;
     ui->setupUi(this);
+    ui->pushButton->setToolTip("return");
+       ui->pushButton_3->setToolTip("refresh");
+    QPixmap bkgnd(":/image/image/bck.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    QPalette palette;
+
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+  //  QMainWindow::resizeEvent(evt); // call inherited implementation
+
+
+        QPixmap pixmap(":/image/image/ref.png");
+                QIcon ButtonIcon(pixmap);
+        ui->pushButton_3->setIcon(ButtonIcon);
+        QPixmap pixmap2(":/image/image/ret.png");
+                QIcon ButtonIcon2(pixmap2);
+        ui->pushButton->setIcon(ButtonIcon2);
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
     qDebug()<< database_path;
     myDB = QSqlDatabase::addDatabase("QSQLITE");
@@ -76,29 +96,7 @@ Viewbooklist::~Viewbooklist()
 {
     delete ui;
 }
-void Viewbooklist::resizeEvent(QResizeEvent* evt)
-{
-    ui->pushButton->setToolTip("return");
-       ui->pushButton_3->setToolTip("refresh");
-    QPixmap bkgnd(":/image/image/bck.jpg");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    QPalette palette;
-
-    palette.setBrush(QPalette::Window, bkgnd);
-    this->setPalette(palette);
-
-    QMainWindow::resizeEvent(evt); // call inherited implementation
-
-
-        QPixmap pixmap(":/image/image/ref.png");
-                QIcon ButtonIcon(pixmap);
-        ui->pushButton_3->setIcon(ButtonIcon);
-        QPixmap pixmap2(":/image/image/ret.png");
-                QIcon ButtonIcon2(pixmap2);
-        ui->pushButton->setIcon(ButtonIcon2);
-
-}
 void Viewbooklist::on_pushButton_clicked()
 {
   h2 = new Homepage(this);
@@ -293,8 +291,11 @@ void Viewbooklist::on_pushButton_deleteBook_clicked()
     // QString booknom = QString::number(bookno);
     // QString question ="Are you sure you want to delete book no." + booknom + "?";
      QMessageBox::StandardButton reply;
-      reply = QMessageBox::question(this, "Confirm action", "Are you sure you want to delete the highlighted book?",
-                                    QMessageBox::Yes|QMessageBox::No);
+     if (bo_copies > 0){      reply = QMessageBox::question(this, "Confirm action", "This book is borrowed by one or many members, are you sure you want to delete it? If so, it will also be deleted from borrowed books list.",
+                                                            QMessageBox::Yes|QMessageBox::No);
+     }
+    else{  reply = QMessageBox::question(this, "Confirm action", "Are you sure you want to delete the highlighted book?",
+                                    QMessageBox::Yes|QMessageBox::No);}
       if (reply == QMessageBox::Yes) {
           QSqlQuery qry, qry2, qry3;
           QStringList sl;
@@ -341,8 +342,10 @@ void Viewbooklist::on_tableView_clicked(const QModelIndex &index)
     select_edit_book = true;
     select_insert_book = true;
     //bookno = ui->tableView->model()->index();
-    val = ui->tableView->model()->data(index).toString();
+    val = ui->tableView->model()->index(index.row(),0).data().toString();
+    //val = ui->tableView->model()->data(index).toString();
     av_copies = ui->tableView->model()->index(index.row(),5).data().toInt();
+    bo_copies =ui->tableView->model()->index(index.row(),6).data().toInt();
 
 }
 void Viewbooklist::recieveRef(){

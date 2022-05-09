@@ -13,6 +13,25 @@ Viewmemberlist::Viewmemberlist(QWidget *parent) :
     ui(new Ui::Viewmemberlist)
 {
     ui->setupUi(this);
+    ui->pushButton_return->setToolTip("return");
+       ui->pushButton_refresh->setToolTip("refresh");
+    QPixmap bkgnd(":/image/image/bck.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    QPalette palette;
+
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+//    QMainWindow::resizeEvent(evt); // call inherited implementation
+
+
+        QPixmap pixmap(":/image/image/ref.png");
+                QIcon ButtonIcon(pixmap);
+        ui->pushButton_refresh->setIcon(ButtonIcon);
+        QPixmap pixmap2(":/image/image/ret.png");
+                QIcon ButtonIcon2(pixmap2);
+        ui->pushButton_return->setIcon(ButtonIcon2);
     QSqlDatabase myDB = QSqlDatabase::addDatabase("QSQLITE");
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
     myDB.setDatabaseName(database_path);
@@ -53,29 +72,7 @@ Viewmemberlist::~Viewmemberlist()
 {
     delete ui;
 }
-void Viewmemberlist::resizeEvent(QResizeEvent* evt)
-{
-    ui->pushButton_return->setToolTip("return");
-       ui->pushButton_refresh->setToolTip("refresh");
-    QPixmap bkgnd(":/image/image/bck.jpg");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    QPalette palette;
-
-    palette.setBrush(QPalette::Window, bkgnd);
-    this->setPalette(palette);
-
-    QMainWindow::resizeEvent(evt); // call inherited implementation
-
-
-        QPixmap pixmap(":/image/image/ref.png");
-                QIcon ButtonIcon(pixmap);
-        ui->pushButton_refresh->setIcon(ButtonIcon);
-        QPixmap pixmap2(":/image/image/ret.png");
-                QIcon ButtonIcon2(pixmap2);
-        ui->pushButton_return->setIcon(ButtonIcon2);
-
-}
 void Viewmemberlist::on_pushButton_clicked()
 {
     finalmember = new Finalmember(this);
@@ -96,12 +93,11 @@ void Viewmemberlist::on_tableView_clicked(const QModelIndex &index)
 {
     select_delete_member = true;
      select_edit_member = true;
-     if (index.column() == 5){
-     val2 = ui->tableView->model()->index(index.row(),1).data().toString();
-         return;
-     }
+
+     val2 = ui->tableView->model()->index(index.row(),0).data().toString();
+
     //bookno = ui->tableView->model()->index();
-    val2 = ui->tableView->model()->data(index).toString();
+   // val2 = ui->tableView->model()->data(index).toString();
 }
 
 void Viewmemberlist::on_pushButton_deletemember_clicked()

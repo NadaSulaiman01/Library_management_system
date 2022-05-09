@@ -23,8 +23,8 @@ class Viewbooklist : public QMainWindow
 public:
     explicit Viewbooklist(QWidget *parent = nullptr);
     ~Viewbooklist();
-protected:
- void resizeEvent(QResizeEvent* evt) override;
+//protected:
+// void resizeEvent(QResizeEvent* evt) override;
 
 //signals:
 //  void sendSignal();

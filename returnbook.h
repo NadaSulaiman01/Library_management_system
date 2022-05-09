@@ -17,8 +17,8 @@ class Returnbook : public QMainWindow
 public:
     explicit Returnbook(QWidget *parent = nullptr);
     ~Returnbook();
-protected:
- void resizeEvent(QResizeEvent* evt) override;
+//protected:
+// void resizeEvent(QResizeEvent* evt) override;
 signals:
     void sendCombo();
 

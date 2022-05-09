@@ -12,6 +12,25 @@ Returnbook::Returnbook(QWidget *parent) :
     ui(new Ui::Returnbook)
 {
     ui->setupUi(this);
+    ui->pushButton_returnToHome->setToolTip("return");
+       ui->pushButton_refresh->setToolTip("refresh");
+    QPixmap bkgnd(":/image/image/bck.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    QPalette palette;
+
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
+    //QMainWindow::resizeEvent(evt); // call inherited implementation
+
+
+        QPixmap pixmap(":/image/image/ref.png");
+                QIcon ButtonIcon(pixmap);
+        ui->pushButton_refresh->setIcon(ButtonIcon);
+        QPixmap pixmap2(":/image/image/ret.png");
+                QIcon ButtonIcon2(pixmap2);
+        ui->pushButton_returnToHome->setIcon(ButtonIcon2);
     QSqlDatabase myDB = QSqlDatabase::addDatabase("QSQLITE");
     QString database_path= QCoreApplication::applicationDirPath() + "/library_system.db";
     myDB.setDatabaseName(database_path);
@@ -44,29 +63,7 @@ Returnbook::~Returnbook()
 {
     delete ui;
 }
-void Returnbook::resizeEvent(QResizeEvent* evt)
-{
-    ui->pushButton_returnToHome->setToolTip("return");
-       ui->pushButton_refresh->setToolTip("refresh");
-    QPixmap bkgnd(":/image/image/bck.jpg");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    QPalette palette;
-
-    palette.setBrush(QPalette::Window, bkgnd);
-    this->setPalette(palette);
-
-    QMainWindow::resizeEvent(evt); // call inherited implementation
-
-
-        QPixmap pixmap(":/image/image/ref.png");
-                QIcon ButtonIcon(pixmap);
-        ui->pushButton_refresh->setIcon(ButtonIcon);
-        QPixmap pixmap2(":/image/image/ret.png");
-                QIcon ButtonIcon2(pixmap2);
-        ui->pushButton_returnToHome->setIcon(ButtonIcon2);
-
-}
 void Returnbook::on_pushButton_returnToHome_clicked()
 {
     h4 = new Homepage(this);

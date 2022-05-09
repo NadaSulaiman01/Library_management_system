@@ -19,8 +19,8 @@ class Viewmemberlist : public QMainWindow
 public:
     explicit Viewmemberlist(QWidget *parent = nullptr);
     ~Viewmemberlist();
-protected:
- void resizeEvent(QResizeEvent* evt) override;
+//protected:
+// void resizeEvent(QResizeEvent* evt) override;
 signals:
     void sendData(QStringList);
     void sendCombo();
